@@ -63,7 +63,10 @@ public class K8sDiscoveryModule implements DruidModule
                 try {
                   // Note: we can probably improve things here about figuring out how to find the K8S API server,
                   // HTTP client timeouts etc.
-                  return Config.defaultClient();
+                  ApiClient client = Config.defaultClient();
+                  // See this recommendations https://github.com/kubernetes-client/java/pull/155
+                  client.setReadTimeout(60000);
+                  return client;
                 }
                 catch (IOException ex) {
                   throw new RuntimeException("Failed to create K8s ApiClient instance", ex);
